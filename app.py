@@ -23,22 +23,21 @@ labels = [
     "Ankle Boot"
 ]
 
-model = load_model("model/cnn_model.h5")
+model = load_model("model/cnn_model.h5", compile=False)
 
 (_, _), (X_test, y_test) = fashion_mnist.load_data()
 
-# Model Accuracy
 X_eval = X_test.reshape(-1, 28, 28, 1) / 255.0
 
-loss, accuracy = model.evaluate(
-    X_eval,
-    y_test,
-    verbose=0
-)
+# Manual Accuracy
+predictions = model.predict(X_eval, verbose=0)
+pred_classes = np.argmax(predictions, axis=1)
+
+accuracy = np.mean(pred_classes == y_test)
 
 st.success(f"Model Accuracy: {accuracy:.4f}")
 
-# Test image selector
+# Image Selector
 index = st.slider(
     "Select Test Image",
     0,
